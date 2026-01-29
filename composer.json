@@ -1,0 +1,22 @@
+{
+  "name": "app/my-swoole-app",
+  "description": "Lightweight PHP REST API with Swoole HTTP Server",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "ext-swoole": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "scripts": {
+    "start": "php server.php",
+    "dev": "php server.php",
+    "migrate": "php migrate.php"
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}
