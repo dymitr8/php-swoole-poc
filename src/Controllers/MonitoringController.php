@@ -38,7 +38,7 @@ class MonitoringController
                 MIN(rl) AS rl,
                 AVG(ra) AS ra,
                 MAX(rh) AS rh
-            FROM monitoring_uptime';
+            FROM uptime_history';
 
             $conditions = [];
             if ($tsMin !== null) {
@@ -56,7 +56,7 @@ class MonitoringController
             $sql .= ' GROUP BY floor(t / 3600) ORDER BY t ASC';
         } else {
             
-            $sql = 'SELECT t, p, f, rl, ra, rh FROM monitoring_uptime';
+            $sql = 'SELECT t, p, f, rl, ra, rh FROM uptime_history';
 
             $conditions = [];
             if ($tsMin !== null) {

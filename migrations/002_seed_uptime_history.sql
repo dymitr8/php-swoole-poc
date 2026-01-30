@@ -1,7 +1,7 @@
--- Seed monitoring_uptime table with 365 days of 15-minute interval data
+-- Seed uptime_history table with 365 days of 15-minute interval data
 -- 96 intervals per day × 365 days = 35,040 records
 -- 15 probes per interval with 20-40% failure rate
-INSERT INTO monitoring_uptime (t, p, f, rl, ra, rh)
+INSERT INTO uptime_history (t, p, f, rl, ra, rh)
 SELECT
     t,
     15 - f AS p,                                                    -- pass count

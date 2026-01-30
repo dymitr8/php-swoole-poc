@@ -1,5 +1,5 @@
--- Create monitoring_uptime table (15-minute interval records)
-CREATE TABLE IF NOT EXISTS monitoring_uptime (
+-- Create uptime_history table (15-minute interval records)
+CREATE TABLE IF NOT EXISTS uptime_history (
     id SERIAL PRIMARY KEY,
     t BIGINT NOT NULL,                          -- unix timestamp
     p INTEGER NOT NULL DEFAULT 0,               -- pass count
@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS monitoring_uptime (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create index on timestamp for faster lookups
-CREATE INDEX IF NOT EXISTS idx_monitoring_uptime_t ON monitoring_uptime(t DESC);
+-- Create unique index on timestamp for faster lookups and to prevent duplicates
+CREATE UNIQUE INDEX IF NOT EXISTS idx_uptime_history_t ON uptime_history(t DESC);

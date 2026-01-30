@@ -17,6 +17,7 @@
     "migrate": "php migrate.php"
   },
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "process-timeout": 0
   }
 }

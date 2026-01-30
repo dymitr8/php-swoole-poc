@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/init.php';
+
 use Swoole\HTTP\Server;
 use Swoole\HTTP\Request;
 use Swoole\HTTP\Response;
 use App\Router\Router;
 use App\Database\Connection;
 use App\Controllers\MonitoringController;
-
-require_once __DIR__ . '/vendor/autoload.php';
+use App\Services\UptimeHistoryService;
+use Swoole\Timer;
 
 $config = require __DIR__ . '/config/server.php';
 $dbConfig = require __DIR__ . '/config/database.php';
@@ -52,6 +54,26 @@ $router->get('/api/monitoring', [MonitoringController::class, 'index']);
 
 $server->on('start', function (Server $server) use ($config) {
     echo "Swoole HTTP Server started at http://{$config['host']}:{$config['port']}\n";
+});
+
+$timerInterval = (int)(getenv('UPTIME_TIMER_INTERVAL') ?: 900000);
+
+$server->on('workerStart', function (Server $server, int $workerId) use ($timerInterval) {
+    if ($workerId === 0) {
+        $uptimeService = new UptimeHistoryService();
+
+        $gapsFilled = $uptimeService->fillGaps();
+        if ($gapsFilled > 0) {
+            echo "Filled {$gapsFilled} missing uptime history records\n";
+        }
+
+        Timer::tick($timerInterval, function () use ($uptimeService) {
+            $uptimeService->insertCurrentInterval();
+            echo "Inserted new uptime history record at " . date('Y-m-d H:i:s') . "\n";
+        });
+
+        echo "Uptime history timer started (interval: {$timerInterval}ms)\n";
+    }
 });
 
 $server->on('request', function (Request $request, Response $response) use ($router) {
