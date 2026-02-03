@@ -13,4 +13,5 @@ if (file_exists($envFile)) {
     }
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+include_once __DIR__ . '/source/db.php';
+include_once __DIR__ . '/source/uptime.php';
